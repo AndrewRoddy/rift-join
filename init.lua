@@ -15,15 +15,15 @@
 -- rift doesn't pass counts to plugins, so `3J` only joins two lines. Use
 -- `:Join 3` or `:JoinRaw 3` instead.
 local M = {}
-local MODULE = ...
 
 -- rift.replace_lines also eats the newline after the range, and it takes
--- two undos. So put that newline back, and in Normal mode do the edit
--- inside a quick trip to Insert mode so a single `u` undoes it.
+-- two undos. So put that newline back, and do the edit inside a quick trip
+-- to Insert mode so a single `u` undoes it. That goes for `:Join` too,
+-- which runs while rift is still in command mode.
 local function set_lines(s, e, lines)
   local out = { table.unpack(lines) }
   if #out > 0 and e < rift.get_line_count() then out[#out + 1] = "" end
-  local wrap = rift.get_mode() == "normal"
+  local wrap = rift.get_mode() ~= "insert"
   if wrap then rift.exec_action("mode:insert") end
   rift.replace_lines(s, e, out)
   if wrap then rift.exec_action("mode:normal") end
@@ -214,9 +214,5 @@ end
 
 M._has_comment = has_comment
 M._leader_len = leader_len
-
--- If rift loaded this file straight from its plugins folder (rather than
--- a config require()ing it), set it up with the defaults.
-if not MODULE then M.setup() end
 
 return M

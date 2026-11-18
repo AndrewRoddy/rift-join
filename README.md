@@ -34,17 +34,16 @@ No options. Comment leaders are known for about 60 filetypes and extensions
 
 ## Install
 
-`rift-join.lua` is the whole plugin and has no dependencies. Copy it into
-rift's plugins directory (`%APPDATA%\rift\plugins` on Windows,
-`~/.config/rift/plugins` elsewhere). rift loads it at startup, and it sets
-itself up with the defaults.
-
-To pass options, put it where rift won't load it by itself (any
-subdirectory) and `require` it from one of your own plugin files:
+rift-join installs through riftpm. Install riftpm first from
+[Monster0506/riftpm](https://github.com/Monster0506/riftpm) (see its README),
+then add rift-join to your `plugins.lua` spec:
 
 ```lua
-package.path = package.path .. ";" .. "/path/to/rift-join/?.lua"
-require("rift-join").setup()
+{ "AndrewRoddy/rift-join" },
 ```
+
+Run `:PluginSync` to clone it. It has no options and no dependencies.
+It's small, so load it at startup: with riftpm's lazy `keys`, the first `J`
+would only load the plugin and not join anything.
 
 Tested with rift 0.7.7.
